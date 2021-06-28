@@ -2,6 +2,9 @@ import json
 import re
 import itertools
 
+vowel_file = open('vietnamese_vowel.json', encoding='utf-8')
+vowel_dic = json.load(vowel_file)
+
 short_word_file = open('short_word.json', encoding='utf-8')
 short_word_dic = json.load(short_word_file)
 
@@ -32,8 +35,23 @@ def replace_with_regex(word, regex_list):
             new_word = re.sub(pattern, regex_list[pattern], new_word)
     return new_word
 
+def correct_vowel(sent, dictionary):
+    words = sent.split()
+    pattern = r'[aăâeêuưiyoôơ][.`~?\']'
+    sent = ""
+    for word in words:
+        p = re.search(pattern, word)
+        new_word = word
+        if p:
+            idx = p.span()
+            replace_vowel = dictionary[word[idx[0]]][word[idx[0] + 1]]
+            new_word = re.sub(pattern, replace_vowel, new_word)
+        sent += new_word + ' '
+    return sent
+
 def correct_teencode(sent):
     sent = preprocess(sent)
+    sent = correct_vowel(sent, vowel_dic)
     words = sent.split()
     sent = ""
     for word in words:
@@ -52,6 +70,6 @@ def correct_teencode(sent):
     return sent
 
 if __name__ == '__main__':
-    sent = 'zạ'
+    sent = "vơ'i e thi` la` va.y đo' đó"
     print(correct_teencode(sent))
             
