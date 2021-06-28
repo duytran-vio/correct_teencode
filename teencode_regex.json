@@ -10,5 +10,15 @@
     "q$"    : "ng",
     "w"     : "qu",
     "^q"    : "qu",
-    "^p"    : "ph"
+    "^p"    : "ph",
+    "uog"   : "uong",
+    "ug"    : "ung",
+    "iêg"   : "iêng",
+    "og"    : "ong",
+    "ag"    : "ang",
+    "oag"   : "oang",
+    "ank"   : "anh",
+    "ah"    : "anh",
+    "ih"    : "inh",
+    "ink"   : "inh"
 }

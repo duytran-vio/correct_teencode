@@ -29,8 +29,7 @@ def replace_with_regex(word, regex_list):
     new_word = word
     for pattern in regex_list.keys():
         if re.search(pattern, word):
-            new_word = re.sub(pattern, regex_list[pattern], word)
-            break
+            new_word = re.sub(pattern, regex_list[pattern], new_word)
     return new_word
 
 def correct_teencode(sent):
@@ -53,6 +52,6 @@ def correct_teencode(sent):
     return sent
 
 if __name__ == '__main__':
-    sent = 'cai nay bn vay c'
+    sent = 'zạ'
     print(correct_teencode(sent))
             
