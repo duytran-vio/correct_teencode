@@ -22,7 +22,7 @@
     "nt"    : "nhắn tin",
     "bnhiu" : "bao nhiêu",
     "nhtrag": "nha trang",
-    "nhiu"  : "nhiều",
+    "nhiu"  : "nhiêu",
     "lun"   : "luôn",
     "mih"   : "mình",
     "mik"   : "mình",
@@ -279,5 +279,6 @@
     "chs"   : "chả hiểu sao",
     "klq"   : "không liên quan",
     "gato"  : "ghen ăn tức ở",
-    "<3"    : "trái tim"
+    "<3"    : "trái tim",
+    "hqua"  : "hôm qua"
 }
