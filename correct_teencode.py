@@ -8,14 +8,6 @@ def read_file(file_path):
     ls = fi.readlines()
     return ls
 
-def preprocess2(sent):
-    sent = sent.lower()
-    sent = re.sub(r'(?<=[;,])(?=[^\s])', r' ', sent)
-    sent = re.sub(r'\s+', r' ', sent)
-    sent = re.sub(r'^\s', '', sent)
-    sent = re.sub(r'\s$', '', sent)
-    return sent
-
 vowel_file = open('vietnamese_vowel.json', encoding='utf-8')
 vowel_dic = json.load(vowel_file)
 
@@ -43,10 +35,15 @@ def preprocess(sent):
     return sent
 
 def replace_one_one(word, dictionary):
+    '''
+    replace teencode with correct one by using dictionary
+    Input: 
+        word        :str - teencode word 
+        dictionary  : pd.Dataframe - 1-1 dictionary
+    return: 
+        new_word    :str - correct word
+    '''
     new_word = dictionary.get(word, word)
-    # if new_word == word:
-    #     uni_word = unidecode.unidecode(word)
-    #     new_word = dictionary.get(uni_word, word)
     if new_word == word:
         uni_word = unidecode.unidecode(word)
         uni_word = replace_with_regex(uni_word, teencode_re_dic, dictionary)
@@ -54,6 +51,16 @@ def replace_one_one(word, dictionary):
     return new_word
 
 def replace_with_regex(word, regex_list, dic_one_one, check = 0):
+    '''
+    replace teencode with correct one by using rule (regex)
+    Input:
+        word        : str - teencode word
+        regex_list  : pd.DataFrame - teencode regex 
+        dic_one_one : pd.DataFrame - 1-1 dictionary
+        check       : boolean - number of times using this method
+    return: 
+        new_word    : str - correct word
+    '''
     new_word = unidecode.unidecode(word)
     for pattern in regex_list.keys():
         if re.search(pattern, new_word):
@@ -64,7 +71,15 @@ def replace_with_regex(word, regex_list, dic_one_one, check = 0):
     new_word = replace_with_regex(new_word, teencode_re_dic, short_word_dic, check + 1)
     return new_word
 
-def correct_vowel(sent, dictionary):
+def correct_vowel(sent, vowel_dictionary):
+    '''
+    correct sentence has vowel next to symbol by rule. Ex: a~ -> ã
+    Input:
+        sent    : str - teencode sentence
+        vowel_dictionary: pd.DataFrame - vietnamese_vowel dictionary
+    return:
+        sent    : str - correct sentence
+    '''
     words = sent.split()
     pattern = r'[aăâeêuưiyoôơ][.`~?\']'
     sent = ""
@@ -73,12 +88,19 @@ def correct_vowel(sent, dictionary):
         new_word = word
         if p:
             idx = p.span()
-            replace_vowel = dictionary[word[idx[0]]][word[idx[0] + 1]]
+            replace_vowel = vowel_dictionary[word[idx[0]]][word[idx[0] + 1]]
             new_word = re.sub(pattern, replace_vowel, new_word)
         sent += new_word + ' '
     return sent
 
 def correct_teencode(sent):
+    '''
+    correct teencode sentence
+    Input: 
+        sent    : str - teencode sent
+    Return:
+        correct sent 
+    '''
     sent = preprocess(sent)
     sent = correct_vowel(sent, vowel_dic)
     words = sent.split()
@@ -98,23 +120,7 @@ def correct_teencode(sent):
         sent += ' '
     return sent[:-1]
 
-
-
 if __name__ == '__main__':
-    # wrong = read_file('teencode_wrong_word.txt')
-    # truth = read_file('teencode_true_word.txt')
-    # ls = []
-    # for i in range(len(wrong)):
-    #     if wrong[i] == None or truth[i] == None: continue
-    #     fixed = correct_teencode(wrong[i])
-    #     truth[i] = preprocess2(truth[i])
-    #     unicode_truth = unidecode.unidecode(truth[i])
-    #     if fixed != truth[i] and fixed != unicode_truth:
-    #         ls.append({'wrong': wrong[i], 'true': truth[i]})
-    # print(len(ls))
-    # # print(correct_teencode("checck"),'check')
-    # import pandas as pd
-    # pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
-    # print(correct_teencode("mẹc"))
+    print(correct_teencode("okiii"))
 
             
