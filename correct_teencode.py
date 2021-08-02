@@ -8,6 +8,14 @@ def read_file(file_path):
     ls = fi.readlines()
     return ls
 
+def preprocess2(sent):
+    sent = sent.lower()
+    sent = re.sub(r'(?<=[;,])(?=[^\s])', r' ', sent)
+    sent = re.sub(r'\s+', r' ', sent)
+    sent = re.sub(r'^\s', '', sent)
+    sent = re.sub(r'\s$', '', sent)
+    return sent
+
 vowel_file = open('vietnamese_vowel.json', encoding='utf-8')
 vowel_dic = json.load(vowel_file)
 
@@ -45,8 +53,7 @@ def replace_one_one(word, dictionary):
     '''
     new_word = dictionary.get(word, word)
     if new_word == word:
-        uni_word = unidecode.unidecode(word)
-        uni_word = replace_with_regex(uni_word, teencode_re_dic, dictionary)
+        uni_word = replace_with_regex(word, teencode_re_dic, dictionary)
         new_word = dictionary.get(uni_word, word)
     return new_word
 
@@ -61,7 +68,7 @@ def replace_with_regex(word, regex_list, dic_one_one, check = 0):
     return: 
         new_word    : str - correct word
     '''
-    new_word = unidecode.unidecode(word)
+    new_word = word
     for pattern in regex_list.keys():
         if re.search(pattern, new_word):
             new_word = re.sub(pattern, regex_list[pattern], new_word)
@@ -121,6 +128,21 @@ def correct_teencode(sent):
     return sent[:-1]
 
 if __name__ == '__main__':
-    print(correct_teencode("okiii"))
+    wrong = read_file('teencode_wrong_word.txt')
+    truth = read_file('teencode_true_word.txt')
+    ls = []
+    for i in range(len(wrong)):
+        if wrong[i] == None or truth[i] == None: continue
+        fixed = correct_teencode(wrong[i])
+        truth[i] = preprocess2(truth[i])
+        unicode_truth = unidecode.unidecode(truth[i])
+        if fixed != truth[i] and fixed != unicode_truth:
+            ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
+    print(len(ls))
+    import pandas as pd
+    pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
+    print(replace_with_regex("hòag", teencode_re_dic, short_word_dic))
+
+
 
             
