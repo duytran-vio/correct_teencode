@@ -48,13 +48,12 @@ def replace_one_one(word, dictionary):
     #     uni_word = unidecode.unidecode(word)
     #     new_word = dictionary.get(uni_word, word)
     if new_word == word:
-        uni_word = unidecode.unidecode(word)
-        uni_word = replace_with_regex(uni_word, teencode_re_dic, dictionary)
+        uni_word = replace_with_regex(word, teencode_re_dic, dictionary)
         new_word = dictionary.get(uni_word, word)
     return new_word
 
 def replace_with_regex(word, regex_list, dic_one_one, check = 0):
-    new_word = unidecode.unidecode(word)
+    new_word = word
     for pattern in regex_list.keys():
         if re.search(pattern, new_word):
             new_word = re.sub(pattern, regex_list[pattern], new_word)
@@ -101,20 +100,21 @@ def correct_teencode(sent):
 
 
 if __name__ == '__main__':
-    # wrong = read_file('teencode_wrong_word.txt')
-    # truth = read_file('teencode_true_word.txt')
-    # ls = []
-    # for i in range(len(wrong)):
-    #     if wrong[i] == None or truth[i] == None: continue
-    #     fixed = correct_teencode(wrong[i])
-    #     truth[i] = preprocess2(truth[i])
-    #     unicode_truth = unidecode.unidecode(truth[i])
-    #     if fixed != truth[i] and fixed != unicode_truth:
-    #         ls.append({'wrong': wrong[i], 'true': truth[i]})
-    # print(len(ls))
-    # # print(correct_teencode("checck"),'check')
-    # import pandas as pd
-    # pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
-    # print(correct_teencode("mẹc"))
+    wrong = read_file('teencode_wrong_word.txt')
+    truth = read_file('teencode_true_word.txt')
+    ls = []
+    for i in range(len(wrong)):
+        if wrong[i] == None or truth[i] == None: continue
+        fixed = correct_teencode(wrong[i])
+        truth[i] = preprocess2(truth[i])
+        unicode_truth = unidecode.unidecode(truth[i])
+        if fixed != truth[i] and fixed != unicode_truth:
+            ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
+    print(len(ls))
+    import pandas as pd
+    pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
+    # print(replace_with_regex("hòag", teencode_re_dic, short_word_dic))
+
+
 
             
