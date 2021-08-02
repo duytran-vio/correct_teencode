@@ -74,7 +74,7 @@ def replace_with_regex(word, regex_list, dic_one_one, check = 0):
             new_word = re.sub(pattern, regex_list[pattern], new_word)
             break
     if dic_one_one.get(new_word, new_word) != new_word: return dic_one_one.get(new_word, new_word)
-    if check == 2 or new_word in single_word_dic: return new_word
+    if check == 2 or unidecode.unidecode(new_word) in single_word_dic: return new_word
     new_word = replace_with_regex(new_word, teencode_re_dic, short_word_dic, check + 1)
     return new_word
 
