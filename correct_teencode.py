@@ -3,6 +3,7 @@ import re
 import itertools
 import unidecode
 
+
 def read_file(file_path):
     fi = open(file_path, 'r', encoding='utf-8')
     ls = fi.readlines()
@@ -26,7 +27,8 @@ teencode_re_file = open('teencode_regex.json', encoding='utf-8')
 teencode_re_dic = json.load(teencode_re_file)
 
 single_word_dic = read_file('unidecode_vietnamese_dic.txt')
-single_word_dic = [re.sub('\n','', s) for s in single_word_dic]
+single_word_dic = [re.sub('\n', '', s) for s in single_word_dic]
+
 
 def preprocess(sent):
     '''
@@ -49,6 +51,7 @@ def preprocess(sent):
         i = j
     return new_sent
 
+
 def replace_one_one(word, dictionary):
     '''
     replace teencode with correct one by using dictionary
@@ -64,7 +67,8 @@ def replace_one_one(word, dictionary):
         new_word = dictionary.get(uni_word, word)
     return new_word
 
-def replace_with_regex(word, regex_list, dic_one_one, check = 0):
+
+def replace_with_regex(word, regex_list, dic_one_one, check=0):
     '''
     replace teencode with correct one by using rule (regex)
     Input:
@@ -84,6 +88,7 @@ def replace_with_regex(word, regex_list, dic_one_one, check = 0):
     if check == 2 or unidecode.unidecode(new_word) in single_word_dic: return new_word
     new_word = replace_with_regex(new_word, teencode_re_dic, short_word_dic, check + 1)
     return new_word
+
 
 def correct_vowel(sent, vowel_dictionary):
     '''
@@ -107,6 +112,7 @@ def correct_vowel(sent, vowel_dictionary):
         sent += new_word + ' '
     return sent
 
+
 def correct_teencode(sent):
     '''
     correct teencode sentence
@@ -124,16 +130,19 @@ def correct_teencode(sent):
         if word[-1] == ',' or word[-1] == ';':
             new_word = replace_one_one(word[:-1], short_word_dic)
             if word[:-1] == new_word:
-                new_word = replace_with_regex(new_word, teencode_re_dic, short_word_dic)
+                new_word = replace_with_regex(
+                    new_word, teencode_re_dic, short_word_dic)
             sent += new_word + word[-1]
         else:
             new_word = replace_one_one(word, short_word_dic)
             if word == new_word:
-                new_word = replace_with_regex(new_word, teencode_re_dic, short_word_dic)
+                new_word = replace_with_regex(
+                    new_word, teencode_re_dic, short_word_dic)
             sent += new_word
         sent += ' '
     sent = preprocess(sent)
     return sent
+
 
 if __name__ == '__main__':
     # wrong = read_file('viettat_wrong_word.txt')
