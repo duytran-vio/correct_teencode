@@ -41,8 +41,15 @@ def preprocess(sent):
     sent = re.sub(r'\s+', r' ', sent)
     sent = re.sub(r'^\s', '', sent)
     sent = re.sub(r'\s$', '', sent)
-    sent = ''.join(c[0] for c in itertools.groupby(sent))
-    return sent
+    i = 0
+    new_sent = ''
+    while i < len(sent):
+        j = i + 1
+        while (not sent[i].isdigit()) and j < len(sent) and sent[i] == sent[j]:
+            j = j + 1
+        new_sent += sent[i]
+        i = j
+    return new_sent
 
 
 def replace_one_one(word, dictionary):
@@ -133,24 +140,25 @@ def correct_teencode(sent):
                     new_word, teencode_re_dic, short_word_dic)
             sent += new_word
         sent += ' '
-    return sent[:-1]
+    sent = preprocess(sent)
+    return sent
 
 
 if __name__ == '__main__':
-    wrong = read_file('teencode_wrong_word.txt')
-    truth = read_file('teencode_true_word.txt')
-    ls = []
-    for i in range(len(wrong)):
-        if wrong[i] == None or truth[i] == None: continue
-        fixed = correct_teencode(wrong[i])
-        truth[i] = preprocess2(truth[i])
-        unicode_truth = unidecode.unidecode(truth[i])
-        if fixed != truth[i] and fixed != unicode_truth:
-            ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
-    print(len(ls))
-    import pandas as pd
-    pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
-    print(replace_with_regex("hòag", teencode_re_dic, short_word_dic))
+    # wrong = read_file('viettat_wrong_word.txt')
+    # truth = read_file('viettat_true_word.txt')
+    # ls = []
+    # for i in range(len(wrong)):
+    #     if wrong[i] == None or truth[i] == None: continue
+    #     fixed = correct_teencode(wrong[i])
+    #     truth[i] = preprocess2(truth[i])
+    #     unicode_truth = unidecode.unidecode(truth[i])
+    #     if fixed != truth[i] and fixed != unicode_truth:
+    #         ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
+    # print(len(ls))
+    # import pandas as pd
+    # pd.DataFrame(ls).to_excel('viettat.xlsx', index = False, engine='xlsxwriter')
+    print(correct_teencode("e"))
 
 
 
