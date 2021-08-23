@@ -41,6 +41,9 @@ def preprocess(sent):
     sent = re.sub(r'\s+', r' ', sent)
     sent = re.sub(r'^\s', '', sent)
     sent = re.sub(r'\s$', '', sent)
+    return sent
+
+def unique_charaters(sent):
     i = 0
     new_sent = ''
     while i < len(sent):
@@ -79,7 +82,7 @@ def replace_with_regex(word, regex_list, dic_one_one, check=0):
     return: 
         new_word    : str - correct word
     '''
-    new_word = word
+    new_word = unique_charaters(word)
     for pattern in regex_list.keys():
         if re.search(pattern, new_word):
             new_word = re.sub(pattern, regex_list[pattern], new_word)
@@ -145,20 +148,20 @@ def correct_teencode(sent):
 
 
 if __name__ == '__main__':
-    # wrong = read_file('viettat_wrong_word.txt')
-    # truth = read_file('viettat_true_word.txt')
-    # ls = []
-    # for i in range(len(wrong)):
-    #     if wrong[i] == None or truth[i] == None: continue
-    #     fixed = correct_teencode(wrong[i])
-    #     truth[i] = preprocess2(truth[i])
-    #     unicode_truth = unidecode.unidecode(truth[i])
-    #     if fixed != truth[i] and fixed != unicode_truth:
-    #         ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
-    # print(len(ls))
-    # import pandas as pd
-    # pd.DataFrame(ls).to_excel('viettat.xlsx', index = False, engine='xlsxwriter')
-    print(correct_teencode("e"))
+    wrong = read_file('viettat_wrong_word.txt')
+    truth = read_file('viettat_true_word.txt')
+    ls = []
+    for i in range(len(wrong)):
+        if wrong[i] == None or truth[i] == None: continue
+        fixed = correct_teencode(wrong[i])
+        truth[i] = preprocess2(truth[i])
+        unicode_truth = unidecode.unidecode(truth[i])
+        if fixed != truth[i] and fixed != unicode_truth:
+            ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
+    print(len(ls))  
+    import pandas as pd
+    pd.DataFrame(ls).to_excel('viettat.xlsx', index = False, engine='xlsxwriter')
+    # print(correct_teencode("e"))
 
 
 
