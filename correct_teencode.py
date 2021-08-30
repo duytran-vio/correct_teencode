@@ -17,19 +17,19 @@ def preprocess2(sent):
     sent = re.sub(r'\s$', '', sent)
     return sent
 
-vowel_file = open('vietnamese_vowel.json', encoding='utf-8')
+vowel_file = open('teencode/vietnamese_vowel.json', encoding='utf-8')
 vowel_dic = json.load(vowel_file)
 
-short_word_file = open('short_word.json', encoding='utf-8')
+short_word_file = open('teencode/short_word.json', encoding='utf-8')
 short_word_dic = json.load(short_word_file)
 
-teencode_re_file = open('teencode_regex.json', encoding='utf-8')
+teencode_re_file = open('teencode/teencode_regex.json', encoding='utf-8')
 teencode_re_dic = json.load(teencode_re_file)
 
-single_word_dic = read_file('unidecode_vietnamese_dic.txt')
+single_word_dic = read_file('teencode/unidecode_vietnamese_dic.txt')
 single_word_dic = [re.sub('\n', '', s) for s in single_word_dic]
 
-eng_file = open('eng_dic.json', 'r')
+eng_file = open('teencode/eng_dic.json', 'r')
 eng_dic = json.load(eng_file)
 
 def preprocess(sent):
@@ -148,8 +148,8 @@ def correct_teencode(sent):
 
 
 if __name__ == '__main__':
-    # wrong = read_file('teencode_wrong_word.txt')
-    # truth = read_file('teencode_true_word.txt')
+    # wrong = read_file('data/teencode_wrong_word.txt')
+    # truth = read_file('data/teencode_true_word.txt')
     # ls = []
     # for i in range(len(wrong)):
     #     if wrong[i] == None or truth[i] == None: continue
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     # print(len(ls))  
     # import pandas as pd
     # pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
-    print(correct_teencode_word("shop: bạn đang trả lời bình luận của người dùng về bài viết trên trang của mình. xem bình luận.(https://facebook.com/thoitranghume/posts/155656539509206?comment_id=101675498683257)"))
+    print(correct_teencode("e nhận dc r nha c iuuuu"))
 
 
 

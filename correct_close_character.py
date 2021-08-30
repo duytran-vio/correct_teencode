@@ -5,14 +5,14 @@ import re
 
 telexCorrector = TelexErrorCorrector()
 
-fi = open('single_word_dict.json', 'r', encoding='utf-8')
+fi = open('close_character/single_word_dict.json', 'r', encoding='utf-8')
 single_dict = json.load(fi)
 
-fi = open('vietnamese_dict.json', 'r', encoding='utf-8')
+fi = open('close_character/vietnamese_dict.json', 'r', encoding='utf-8')
 vietnamese_dict = json.load(fi)
 
 def read_close_charater_json():
-    fi = open('close_character.json')
+    fi = open('close_character/close_character.json')
     close_char = json.load(fi)
     for character in close_char.keys():
         close_char[character] = close_char[character].split('|')
@@ -100,6 +100,23 @@ def correct_close_character_sent(sent):
             is_fix[i + 1] = True
     return ' '.join(words)
 
+def read_file(file_path):
+    fi = open(file_path, 'r', encoding='utf-8')
+    ls = fi.readlines()
+    return ls
 
 if __name__ == '__main__':
-    print(correct_close_character_sent('C đặt bôk nay nua dc ko'))
+    # wrong = read_file('data/phimgan_wrong.txt')
+    # truth = read_file('data/phimgan_truth.txt')
+    # ls = []
+    # for i in range(len(wrong)):
+    #     if wrong[i] == None or truth[i] == None: continue
+    #     fixed = correct_close_character_sent(wrong[i])
+    #     truth[i] = preprocess(truth[i])
+    #     unicode_truth = unidecode.unidecode(truth[i])
+    #     if fixed != truth[i] and fixed != unicode_truth:
+    #         ls.append({'wrong': wrong[i], 'true': truth[i], 'fixed': fixed})
+    # print(len(ls))  
+    # import pandas as pd
+    # pd.DataFrame(ls).to_excel('data/phimgan.xlsx', index = False, engine='xlsxwriter')
+    print(correct_close_character_sent('bitnh thuofngw'), telexCorrector.fix_telex_word('tòw'))

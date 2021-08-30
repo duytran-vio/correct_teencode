@@ -13,7 +13,7 @@ class TelexErrorCorrector:
       Step 2: Use regex to fix accent such as af => à, ar => ả
       Step 3: Use regex to fix complex telex fault ừơng -> ường
     '''
-    fi = open('complex_telex_fault.json', encoding='utf-8')
+    fi = open('telex/complex_telex_fault.json', encoding='utf-8')
     complex_telex = json.load(fi)
 
     def __init__(self):
