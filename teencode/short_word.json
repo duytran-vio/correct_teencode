@@ -53,7 +53,6 @@
     "ckh"   : "chuyển khoản",
     "bdien" : "bưu điện",
     "dchi"  : "địa chỉ",
-    "kg"    : "không",
     "shjp"  : "ship",
     "dug"   : "đúng",
     "mh"    : "mình",
@@ -313,7 +312,6 @@
     "hík": "hết",
     "hôk": "không",
     "hùi": "hồi",
-    "hưg": "hết",
     "họk": "không",
     "jmak": "mà",
     "kog": "không",
@@ -782,5 +780,6 @@
     "đúngr" : "đúng rồi",
     "đơnc"  : "đơn chị",
     "đợinv" : "đợi nhân viên",
-    "́bg"    : "baggy"
+    "́bg"    : "baggy",
+    "hwa"   : "hôm qua"
 }

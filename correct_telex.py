@@ -3,7 +3,7 @@
 # %%
 import unicodedata
 import re
-
+import json
 
 class TelexErrorCorrector:
     '''
@@ -11,7 +11,10 @@ class TelexErrorCorrector:
 
       Step 1: Use regex to fix characters such as aw => ă, aa => â
       Step 2: Use regex to fix accent such as af => à, ar => ả
+      Step 3: Use regex to fix complex telex fault ừơng -> ường
     '''
+    fi = open('telex/complex_telex_fault.json', encoding='utf-8')
+    complex_telex = json.load(fi)
 
     def __init__(self):
         self.build_character_regexs()
@@ -26,13 +29,18 @@ class TelexErrorCorrector:
         for key, value in self.char_telex_errors.items():
             word = re.sub(key, value, word)
 
+        word = re.sub('ưo', 'ươ', word)
+
         for key, value in self.accent_telex_errors.items():
+            word = re.sub(key, value, word)
+
+        for key, value in self.complex_telex.items():
             word = re.sub(key, value, word)
 
         return word
 
     def build_character_regexs(self):
-        chars = ['ă', 'â', 'ư', 'ô', 'ơ', 'ê']
+        chars = ['ư', 'â', 'ă', 'ô', 'ơ', 'ê']
         additional_keystrokes = ['w', 'a', 'w', 'o', 'w', 'e']
 
         char_telex_errors = dict()
@@ -49,7 +57,7 @@ class TelexErrorCorrector:
         self.char_telex_errors = char_telex_errors
 
     def build_accent_regexs(self):
-        chars = ['a', 'u', 'o', 'e', 'i', 'y', 'ă', 'â', 'ư', 'ô', 'ơ', 'ê']
+        chars = ['ơ', 'ô', 'ê', 'e', 'ă', 'â', 'ư', 'a', 'o', 'i', 'u', 'y']
         accents = ['í', 'ỉ', 'ĩ', 'ì', 'ị']
         accents = [unicodedata.normalize('NFKD', a)[1] for a in accents]
         additional_keystrokes = ['s', 'r', 'x', 'f', 'j']
@@ -71,5 +79,5 @@ class TelexErrorCorrector:
 # %%
 if __name__ == "__main__":
     corrector = TelexErrorCorrector()
-    fixed = corrector.fix_telex_sentence('laf sao thees')
+    fixed = corrector.fix_telex_sentence('khuir')
     print(fixed)
