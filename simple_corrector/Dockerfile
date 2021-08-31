@@ -12,4 +12,4 @@ COPY --from=builder /app /app
 COPY . .
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 5000
-CMD [ "python", "app.py" ]
+CMD [ "sh", "app.sh" ]

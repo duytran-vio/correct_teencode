@@ -2,3 +2,5 @@ uvicorn
 fastapi
 unidecode
 tensorflow
+pandas
+tqdm

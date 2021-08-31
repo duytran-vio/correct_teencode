@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  correctteencode:
+    image: correctteencode
+    build:
+      context: ./simple_corrector
+      dockerfile: ./Dockerfile
+    ports:
+      - 5001:5000
+    depends_on: 
+      - accent
+    environment: 
+      ACCENT_URL: "http://accent:5000/accent"
+  accent:
+    image: accent
+    build:
+      context: ./vn_accent
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
