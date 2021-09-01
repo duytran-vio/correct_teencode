@@ -26,6 +26,10 @@ class TelexErrorCorrector:
         return ' '.join(words)
 
     def fix_telex_word(self, word):
+        word = unicodedata.normalize('NFKD', word)
+        for accent, keystroke in self.accent_to_telex.items():
+            word = re.sub(accent, keystroke, word)
+
         for key, value in self.char_telex_errors.items():
             word = re.sub(key, value, word)
 
@@ -62,6 +66,12 @@ class TelexErrorCorrector:
         accents = [unicodedata.normalize('NFKD', a)[1] for a in accents]
         additional_keystrokes = ['s', 'r', 'x', 'f', 'j']
 
+        accent_to_telex = dict()
+        for i in range(len(accents)):
+            accent_to_telex[accents[i]] = additional_keystrokes[i]
+
+        self.accent_to_telex = accent_to_telex
+
         accent_telex_errors = dict()
 
         for c in chars:
@@ -79,5 +89,7 @@ class TelexErrorCorrector:
 # %%
 if __name__ == "__main__":
     corrector = TelexErrorCorrector()
-    fixed = corrector.fix_telex_sentence('khuir')
+    fixed = corrector.fix_telex_sentence('choỉo')
     print(fixed)
+    # print(unicodedata.normalize('NFKD', 'chói')[3])
+# %%
