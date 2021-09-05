@@ -8,10 +8,11 @@ import json
 class TelexErrorCorrector:
     '''
       Fix telex typing errors by regexs by function fix_telex_sentence
-
+      
+      Step 0: Convert accent to keystrokes and push it to the end of word: 'tròiw' -> 'troifw'
       Step 1: Use regex to fix characters such as aw => ă, aa => â
       Step 2: Use regex to fix accent such as af => à, ar => ả
-      Step 3: Use regex to fix complex telex fault ừơng -> ường
+      Step 3: Use regex to fix additional telex fault which can't be fixed in previous step: uả -> ủa
     '''
     fi = open('telex/complex_telex_fault.json', encoding='utf-8')
     complex_telex = json.load(fi)
@@ -26,21 +27,39 @@ class TelexErrorCorrector:
         return ' '.join(words)
 
     def fix_telex_word(self, word):
+
+        ## covert accents to keystrokes
+        word = word.lower()
         word = unicodedata.normalize('NFKD', word)
         for accent, keystroke in self.accent_to_telex.items():
             word = re.sub(accent, keystroke, word)
 
+        ## push keystrokes to the end of word
+        reorder_word = word
+        i = 1
+        n = len(word)
+        while (i < n):
+            a = reorder_word[i]
+            if a in self.additional_keystrokes + ['w'] and (reorder_word[i - 1] + a != 'tr'):
+                reorder_word = reorder_word[:i] + reorder_word[i+1:] + a
+                n = n - 1
+            else:
+                i = i + 1
+        word = reorder_word
+
+        word = unicodedata.normalize('NFC', word)
+
         for key, value in self.char_telex_errors.items():
             word = re.sub(key, value, word)
 
+        ## 'trưong' -> 'trương'
         word = re.sub('ưo', 'ươ', word)
 
         for key, value in self.accent_telex_errors.items():
             word = re.sub(key, value, word)
 
         for key, value in self.complex_telex.items():
-            word = re.sub(key, value, word)
-
+            word = re.sub(key, value, word) 
         return word
 
     def build_character_regexs(self):
@@ -65,6 +84,7 @@ class TelexErrorCorrector:
         accents = ['í', 'ỉ', 'ĩ', 'ì', 'ị']
         accents = [unicodedata.normalize('NFKD', a)[1] for a in accents]
         additional_keystrokes = ['s', 'r', 'x', 'f', 'j']
+        self.additional_keystrokes = additional_keystrokes
 
         accent_to_telex = dict()
         for i in range(len(accents)):
@@ -89,7 +109,6 @@ class TelexErrorCorrector:
 # %%
 if __name__ == "__main__":
     corrector = TelexErrorCorrector()
-    fixed = corrector.fix_telex_sentence('choỉo')
+    fixed = corrector.fix_telex_sentence('huywejn')
     print(fixed)
-    # print(unicodedata.normalize('NFKD', 'chói')[3])
 # %%
