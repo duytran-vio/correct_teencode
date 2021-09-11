@@ -28,7 +28,7 @@ def preprocess(sent):
     '''
     sent = sent.lower()
     # sent = re.sub(r'(?<=[;,.])(?=[^\s])', r' ', sent)
-    sent = re.sub(r'[;,.]', r' ', sent)
+    sent = re.sub(r'[;,.-]', r' ', sent)
     sent = re.sub(r'\s+', r' ', sent)
     sent = re.sub(r'^\s', '', sent)
     sent = re.sub(r'\s$', '', sent)
@@ -119,4 +119,4 @@ if __name__ == '__main__':
     # print(len(ls))  
     # import pandas as pd
     # pd.DataFrame(ls).to_excel('data/phimgan.xlsx', index = False, engine='xlsxwriter')
-    print(correct_close_character_sent('bitnh thuofngw'), telexCorrector.fix_telex_word('tòw'))
+    print(correct_close_character_sent('livk'), telexCorrector.fix_telex_word('tòw'))
