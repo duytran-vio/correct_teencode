@@ -33,13 +33,8 @@ eng_file = open('teencode/eng_dic.json', 'r')
 eng_dic = json.load(eng_file)
 
 def preprocess(sent):
-    '''
-    preprocess
-        multi space, characters
-        after a comma, semi-comma has space
-    '''
     sent = sent.lower()
-    sent = re.sub(r'(?<=[;,])(?=[^\s])', r' ', sent)
+    sent = re.sub(r'[;,.?:\=\+\|!]', r' ', sent)
     sent = re.sub('\n', '', sent)
     sent = re.sub(r'\s+', r' ', sent)
     sent = re.sub(r'^\s', '', sent)
@@ -58,7 +53,7 @@ def unique_charaters(sent):
     return new_sent
 
 
-def replace_one_one(word, dictionary):
+def replace_one_one(word, dictionary = short_word_dic):
     '''
     replace teencode with correct one by using dictionary
     Input: 
@@ -107,7 +102,7 @@ def correct_vowel(word, vowel_dictionary):
     return:
         sent    : str - correct sentence
     '''
-    pattern = r'[aăâeêuưiyoôơ][.`~?\']'
+    pattern = r'[aăâeêuưiyoôơ][`~\']'
     p = re.search(pattern, word)
     new_word = word
     if p:
@@ -146,6 +141,16 @@ def correct_teencode(sent):
     sent = preprocess(sent)
     return sent
 
+def correct_short_word_sent(sent):
+    sent = preprocess(sent)
+    words = sent.split()
+    sent = ""
+    for word in words:
+        new_word = replace_one_one(word)
+        sent += new_word + ' '
+    sent = preprocess(sent)
+    return sent
+
 
 if __name__ == '__main__':
     # wrong = read_file('data/teencode_wrong_word.txt')
@@ -161,7 +166,7 @@ if __name__ == '__main__':
     # print(len(ls))  
     # import pandas as pd
     # pd.DataFrame(ls).to_excel('teencode.xlsx', index = False, engine='xlsxwriter')
-    print(correct_teencode("e nhận dc r nha c iuuuu"))
+    print(correct_teencode("trơk"))
 
 
 
